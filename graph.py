@@ -20,7 +20,6 @@ class Graph:
             self.degrees[a] += 1
             self.degrees[b] += 1
             self.edges.append((a, b, w))
-        print("initialized graph: {} {}".format(self.n_vertices, self.edges))
 
     @property
     def n_edges(self):
@@ -48,7 +47,6 @@ class Graph:
         for w in gen:
             self.set_weight(u, w, self.weight(u, w) + self.weight(v, w))
             self.set_weight(v, w, 0)
-        print(self.edges)
 
 
 def contract(graph, n_v=2):
@@ -60,11 +58,11 @@ def contract(graph, n_v=2):
 
 
 def karger_stein(graph):
-    if graph.n_edges <= 6:
+    if graph.n_vertices <= 6:
         g1 = contract(graph, 2)
         u, v, w = g1.edges[0]
         return w
     t = int(np.ceil(graph.n_vertices / np.sqrt(2)) + 1)
-    w1 = karger_stein(contract(copy.deepcopy(graph), t))
-    w2 = karger_stein(contract(copy.deepcopy(graph), t))
+    w1 = karger_stein(contract(graph, t))
+    w2 = karger_stein(contract(graph, t))
     return min(w1, w2)
