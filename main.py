@@ -19,7 +19,7 @@ print("-"*80)
 for (afile, time, d_time, sol, n, m) in run_times:
     print(fstr.format(afile, time, d_time, n, m, sol))
 
-with open("file.txt", 'w') as f:
+with open("karger_stein_results.txt", 'w') as f:
     writer = csv.writer(f)
     for el in run_times:
         writer.writerow(el)
