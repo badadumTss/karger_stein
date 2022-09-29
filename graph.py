@@ -1,6 +1,7 @@
 import numpy as np
 import copy
 from random import randrange
+from time import perf_counter_ns
 
 
 class Graph:
@@ -60,8 +61,11 @@ def karger_stein(graph):
     if graph.n_vertices <= 6:
         g1 = contract(graph, 2)
         u, v, w = g1.edges[0]
-        return w
+        return w, perf_counter_ns()
     t = int(np.ceil(graph.n_vertices / np.sqrt(2)) + 1)
-    w1 = karger_stein(contract(graph, t))
-    w2 = karger_stein(contract(graph, t))
-    return min(w1, w2)
+    w1, t1 = karger_stein(contract(graph, t))
+    w2, t2 = karger_stein(contract(graph, t))
+    if w2 < w1:
+        return w2, t2
+    else:
+        return w1, t1

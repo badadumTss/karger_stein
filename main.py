@@ -10,14 +10,14 @@ import csv
 
 num_calls = 10
 num_instances = 3
-run_times = [measure_run_time(afile, num_calls, num_instances) + (afile,)
+run_times = [(afile, ) + measure_run_time(afile, num_calls, num_instances)
              for afile in tqdm(files)]
 
-fstr = "{:<25}{:<12}{:<15}{:<15}{:<13}"
-print(fstr.format("Name", "Time", "n_vertices", "n_edges", "Solution"))
+fstr = "{:<25}{:<12}{:<12}{:<15}{:<15}{:<13}"
+print(fstr.format("name", "time", "d_time", "n_vertices", "n_edges", "sol"))
 print("-"*80)
-for (time, sol, n, m, afile) in run_times:
-    print(fstr.format(afile, time, n, m, sol))
+for (afile, time, d_time, sol, n, m) in run_times:
+    print(fstr.format(afile, time, d_time, n, m, sol))
 
 with open("file.txt", 'w') as f:
     writer = csv.writer(f)
@@ -25,8 +25,8 @@ with open("file.txt", 'w') as f:
         writer.writerow(el)
 
 print("Plotting ...")
-times = [time for (time, sol, n, m, afile) in run_times]
-n = [n for (time, sol, n, m, afile) in run_times]
+times = [time for (afile, time, d_time, sol, n, m) in run_times]
+n = [n for (afile, time, d_time, sol, n, m) in run_times]
 
 def O(n):
     return (n**2)*(np.log(n) ** 3)
@@ -41,7 +41,7 @@ y = [c*O(n) for n in x]
 ax = plt.gca()
 ax.scatter(n, times, label="karger_stein runs")
 
-ax.plot(list(x), y, label=r'$n^3\log^3{n}$')
+ax.plot(list(x), y, 'y', label=r'$n^3\log^3{n}$')
 ax.legend()
 plt.ylabel("time (ns)")
 plt.xlabel("input nodes")
