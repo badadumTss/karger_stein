@@ -56,7 +56,6 @@ def contract(graph, n_v=2):
         g.merge_vertices(r)
     return g
 
-
 def karger_stein(graph):
     if graph.n_vertices <= 6:
         g1 = contract(graph, 2)

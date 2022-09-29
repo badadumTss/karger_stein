@@ -21,4 +21,4 @@ def measure_run_time(input_name, num_calls, num_instances):
     tqdm.write('done.\n')
     avg_time = int(round(sum_times/num_instances))
     # return average time in nanoseconds
-    return avg_time, amin
+    return avg_time, amin, graph.n_vertices, graph.n_edges
