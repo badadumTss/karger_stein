@@ -1,0 +1,14 @@
+#+TITLE: Minimum Cut problem
+#+AUTHOR: Luca Zaninotto -- 2057074
+#+DATE: 30 sept 2022
+* The problem
+Description of the problem
+* Karger and Stein
+** Solution description (brief)
+** Results
+* Stoer and Wagner
+** Solution description (brief)
+** Results
+* Hybrid approach
+** Solution description (brief)
+** Results

@@ -1,6 +1,7 @@
 from graph import Graph
 from tqdm import tqdm
 
+
 def parse_file(filename: str):
     with open(filename, 'r') as afile:
         num_nodes, num_edges = afile.readline().split(' ')
@@ -16,5 +17,6 @@ def parse_file(filename: str):
             weight = int(weight)
             edges.append((v1, v2, weight))
 
-        tqdm.write("file: {}\nnodes: {}\nedges: {}".format(filename,num_nodes,num_edges))
+        tqdm.write("file: {}\nnodes: {}\nedges: {}".format(
+            filename, num_nodes, num_edges))
         return Graph(num_nodes, edges)

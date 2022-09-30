@@ -6,7 +6,7 @@ from graph import karger_stein
 import gc
 
 
-def measure_run_time(input_name, num_calls, num_instances):
+def measure_run_time(func, input_name, num_calls, num_instances):
     sum_times = 0.0
     graph = parse_file("dataset/{}".format(input_name))
     d_times = []
@@ -16,7 +16,7 @@ def measure_run_time(input_name, num_calls, num_instances):
         start_time = perf_counter_ns()
         for i in range(num_calls):
             raw_start = perf_counter_ns()
-            amin, d_time = karger_stein(graph)
+            amin, d_time = func(graph)
             # discovery time as a delta from the raw call
             d_time -= raw_start
             d_times += [d_time]
@@ -26,6 +26,6 @@ def measure_run_time(input_name, num_calls, num_instances):
     tqdm.write('done.\n')
     avg_time = int(round(sum_times/num_instances))
     avg_disc = int(round(sum(d_times)/(num_calls*num_instances)))
-    
+
     # return average time in nanoseconds
     return avg_time, avg_disc, amin, graph.n_vertices, graph.n_edges
