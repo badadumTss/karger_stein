@@ -1,9 +1,7 @@
 import numpy as np
 import copy
 from random import randrange
-from time import perf_counter_ns
-from queue import PriorityQueue
-from queue_entries import PEntry
+from tqdm import tqdm
 
 
 class Graph:
@@ -14,112 +12,58 @@ class Graph:
         # adj matrix initialised as such would be not valid
         self.adj_matrix = np.zeros((n_vertices, n_vertices))
         self.n_vertices = n_vertices
-        self.edges = []
-        self.vertices = set([i for i in range(self.n_vertices)])
-
+        self.vertices = [i for i in range(self.n_vertices)]
         self.degrees = np.zeros(n_vertices)
         for (a, b, w) in edges:
             self.adj_matrix[a][b] = self.adj_matrix[b][a] = w
-            self.degrees[a] += 1
-            self.degrees[b] += 1
-            self.edges.append((a, b, w))
+        self.normalize_adj()
+
+    def normalize_adj(self):
+        self.adj_matrix = np.triu(self.adj_matrix)
 
     @property
     def n_edges(self):
-        return len(self.edges)
+        return int(len(np.nonzero(self.adj_matrix)[0]))
+
+    @property
+    def edges(self):
+        gen = np.nonzero(self.adj_matrix)
+        l = zip(gen[0], gen[1])
+        return list(l)
 
     def __repr__(self):
         return "{}".format(self.adj_matrix)
 
     def weight(self, u, v):
-        return self.adj_matrix[u][v]
+        if v > u:
+            return self.adj_matrix[u][v]
+        else:
+            return self.adj_matrix[v][u]
 
     def set_weight(self, u, v, n_w):
         self.adj_matrix[u][v] = self.adj_matrix[v][u] = n_w
+        self.normalize_adj()
 
     def adj_list(self, v):
-        to_ret = []
-        for i, u in enumerate(self.adj_matrix[v]):
-            if u != 0:
-                to_ret += [i]
-        return to_ret
+        row = self.adj_matrix[v,:]
+        col = self.adj_matrix[:,v]
+        return [i for i,u in enumerate(row+col) if u != 0]
 
     def merge_vertices(self, edge_index):
-        u, v, w = self.edges[edge_index]
-        del self.edges[edge_index]
-        self.n_vertices -= 1
-        self.degrees[u] = self.degrees[u] + \
-            self.degrees[v] - (2 * self.weight(u, v))
-        self.degrees[v] = 0
-        self.set_weight(u, v, 0)
+        i = np.nonzero(self.adj_matrix)
+        u, v = list(zip(i[0], i[1]))[edge_index]
+        w = self.adj_matrix[u][v]
+
         # generator for all the nodes except u and v
-        gen = (w for w in range(self.n_vertices) if w != u and w != v)
-        for w in gen:
-            self.set_weight(u, w, self.weight(u, w) + self.weight(v, w))
-            self.set_weight(v, w, 0)
+        gen = (x for x in self.vertices if x != u and x != v)
+        
+        for x in gen:
+            self.set_weight(u, x, self.weight(u, x) + self.weight(v, x))
+            
+        self.remove(v)
 
     def remove(self, n):
         self.n_vertices -= 1
         self.adj_matrix[n, :] = 0
         self.adj_matrix[:, n] = 0
         self.vertices.remove(n)
-        for i, (u,v,w) in enumerate(self.edges):
-            if u == n or v == n:
-                del self.edges[i]
-
-
-def contract(graph, n_v=2):
-    g = copy.deepcopy(graph)
-    while g.n_vertices > n_v:
-        r = randrange(0, g.n_edges)
-        g.merge_vertices(r)
-    return g
-
-
-def karger_stein(graph):
-    if graph.n_vertices <= 6:
-        g1 = contract(graph, 2)
-        u, v, w = g1.edges[0]
-        return w, perf_counter_ns()
-    t = int(np.ceil(graph.n_vertices / np.sqrt(2)) + 1)
-    w1, t1 = karger_stein(contract(graph, t))
-    w2, t2 = karger_stein(contract(graph, t))
-    if w2 < w1:
-        return w2, t2
-    else:
-        return w1, t1
-
-
-def stMinCut(graph):
-    q = PriorityQueue()
-    # Priority queue init
-    for u in graph.vertices:
-        q.put((0, u))
-    s = t = None
-    while not q.empty():
-        (k, u) = q.get()
-        s, t = t, u
-        # Probably sbagliato
-        for v in graph.adj_list(u):
-            for e in q.queue:
-                k, n = e
-                if n == v:
-                    k -= graph.weight(u, v)
-    return sum(graph.adj_matrix[t]), s, t, perf_counter_ns()
-
-
-def stoer_wagner(graph):
-    if graph.n_vertices == 2:
-        vertices = list(v for v in graph.vertices)
-        return graph.weight(vertices[0], vertices[1]), perf_counter_ns()
-    else:
-        c1, s, t, d_t1= stMinCut(graph)
-        # G\{s,t}
-        g = copy.deepcopy(graph)
-        g.remove(s)
-        g.remove(t)
-        c2, d_t2 = stoer_wagner(g)
-        if c1 <= c2:
-            return int(c1), d_t1
-        else:
-            return int(c2), d_t2

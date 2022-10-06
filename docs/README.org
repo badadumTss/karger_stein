@@ -6,9 +6,17 @@ Description of the problem
 * Karger and Stein
 ** Solution description (brief)
 ** Results
+   #+attr_html: :width 500px
+   #+attr_latex: :width 500px
+   #+attr_org: :width 500px
+   [[../figs/ks_plot.png]]
 * Stoer and Wagner
 ** Solution description (brief)
 ** Results
+   #+attr_html: :width 500px
+   #+attr_latex: :width 500px
+   #+attr_org: :width 500px
+   [[../figs/sw_plot.png]]
 * Hybrid approach
 ** Solution description (brief)
 ** Results
