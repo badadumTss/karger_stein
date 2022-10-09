@@ -28,6 +28,9 @@ def stoer_wagner(graph):
     if graph.n_vertices == 2:
         vertices = list(v for v in graph.vertices)
         c = perf_counter_ns()
+        # QUI, deve tornare il taglio perchè poi ne deve misurare il
+        # peso, usare solo il peso dell'arco tra i due non restituisce
+        # una visione completa
         return graph.weight(vertices[0], vertices[1]), graph.n_vertices, graph.n_edges, c, c
     else:
         # G\{s,t}
