@@ -5,6 +5,9 @@ from hybrid import hybrid
 from tqdm import tqdm
 from test import measure_run_time
 from rapresentation import ks_complex, plot, plot3D, print_table, sw_complex
+from datetime import datetime
+import random
+random.seed(datetime.now())
 import argparse
 
 parser = argparse.ArgumentParser(description='Run Karger and Stein and/or Stoer and Wagner alogirthms on the inputs in the `dataset` folder.')
@@ -32,23 +35,20 @@ hy_run = []
 
 # Karger Stein
 if not args.no_ks:
-    gen = tqdm(frange)
     print("\n{} KARKGER AND STEIN {}".format(decor, decor))
-    ks_run = [(afile, ) + measure_run_time(karger_stein, afile, "karger_stein_scratch") for afile in gen]
+    ks_run = measure_run_time(karger_stein, frange, "karger_stein_scratch")
     plot(ks_run, 'Karger and Stein', ks_complex)
 
 # Stoer and Wagner
 if not args.no_sw:
-    gen = tqdm(frange)
     print("{} STOER AND WAGNER {}".format(decor, decor))
-    sw_run = [(afile, ) + measure_run_time(stoer_wagner, afile, "stoer_wagner_scratch") for afile in gen]
+    sw_run = measure_run_time(stoer_wagner, frange, "stoer_wagner_scratch")
     plot3D(sw_run, 'Stoer and Wagner', sw_complex)
 
 # Hybrid
 if not args.no_hy:
-    gen = tqdm(frange)
     print("{} Hybrid {}".format(decor, decor))
-    hy_run = [(afile, ) + measure_run_time(hybrid, afile, "hybrid_scratch", 1) for afile in gen]
+    sw_run = measure_run_time(hybrid, frange, "hybrid_scratch")
     plot3D(hy_run, 'Hybrid', sw_complex)
 
 if not args.no_ks:

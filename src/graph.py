@@ -11,8 +11,7 @@ class Graph:
         # Assumption: there are no zero-valued edges. otherwise the
         # adj matrix initialised as such would be not valid
         self.adj_matrix = np.zeros((n_vertices, n_vertices))
-        self.n_vertices = n_vertices
-        self.vertices = [i for i in range(self.n_vertices)]
+        self.vertices = [i for i in range(n_vertices)]
         self.degrees = np.zeros(n_vertices)
         for (a, b, w) in edges:
             self.adj_matrix[a][b] = self.adj_matrix[b][a] = w
@@ -31,8 +30,12 @@ class Graph:
         l = zip(gen[0], gen[1])
         return list(l)
 
+    @property
+    def n_vertices(self):
+        return len(self.vertices)
+
     def __repr__(self):
-        return "{}".format(self.adj_matrix)
+        return "graph with {} vertices and {} edges".format(self.n_vertices, self.n_edges)
 
     def weight(self, u, v):
         if v > u:
@@ -49,9 +52,7 @@ class Graph:
         col = self.adj_matrix[:,v]
         return [i for i,u in enumerate(row+col) if u != 0]
 
-    def merge_vertices(self, edge_index):
-        i = np.nonzero(self.adj_matrix)
-        u, v = list(zip(i[0], i[1]))[edge_index]
+    def merge_vertices(self, u, v):
         w = self.adj_matrix[u][v]
 
         # generator for all the nodes except u and v
@@ -62,8 +63,8 @@ class Graph:
             
         self.remove(v)
 
-    def remove(self, n):
-        self.n_vertices -= 1
-        self.adj_matrix[n, :] = 0
-        self.adj_matrix[:, n] = 0
+    def remove(self, n, remove_edges=True):
+        if remove_edges:
+            self.adj_matrix[n, :] = 0
+            self.adj_matrix[:, n] = 0
         self.vertices.remove(n)

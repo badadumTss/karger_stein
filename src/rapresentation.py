@@ -40,7 +40,7 @@ def ks_complex(n):
     return (n**2)*(np.log(n) ** 3)
 
 def sw_complex(n,m):
-    return (n*m) + ((n**2)*np.log(n))
+    return n*m*np.log(n)
 
 def save_plot(name):
     run_path = "figs"
