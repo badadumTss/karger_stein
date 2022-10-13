@@ -49,7 +49,7 @@ def test_ks(fname):
     return run
 
 def test_hy(fname):
-    tqdm.write("(sw) working on {}".format(fname))
+    tqdm.write("(hy) working on {}".format(fname))
     graph = parse_file("dataset/{}".format(fname))
     gc.disable()
     start_time = perf_counter_ns()
