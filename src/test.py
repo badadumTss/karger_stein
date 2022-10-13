@@ -62,7 +62,7 @@ def test_hy(fname):
     n, m = graph.n_vertices, graph.n_edges
 
     run = (fname, run_time, disc_time, n, m, amin)
-    write_to_csv(run, "stoer_wagner")
+    write_to_csv(run, "hybrid")
 
     return run
 # Run the alg on the number of instances
