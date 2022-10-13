@@ -1,5 +1,4 @@
 from time import perf_counter_ns
-import copy
 import numpy as np
 from karger_stein import contract
 from stoer_wagner import stoer_wagner

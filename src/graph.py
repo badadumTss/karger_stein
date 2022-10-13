@@ -1,7 +1,4 @@
 import numpy as np
-import copy
-from random import randrange
-from tqdm import tqdm
 
 
 class Graph:
@@ -53,7 +50,7 @@ class Graph:
         return [i for i,u in enumerate(row+col) if u != 0]
 
     def merge_vertices(self, u, v):
-        w = self.adj_matrix[u][v]
+        self.adj_matrix[u][v]
 
         # generator for all the nodes except u and v
         gen = (x for x in self.vertices if x != u and x != v)

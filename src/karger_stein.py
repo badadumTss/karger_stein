@@ -8,7 +8,6 @@ def contract(graph, n_v=2):
     while g.n_vertices > n_v:
         ws = list(map(lambda e: g.weight(e[0],e[1]), g.edges))
         cum_ws = [sum(ws[:i+1]) for i in range(len(ws))]
-        # print(cum_ws)
         res = random.choices(g.edges, cum_weights=cum_ws)
         u, v = res[0]
         g.merge_vertices(u, v)
@@ -35,7 +34,7 @@ def karger_stein(graph):
     amin = np.Inf
     full_d_time = 0
     n = graph.n_vertices
-    m = graph.n_edges
+    graph.n_edges
     k = int(np.ceil(n * np.log(n) / (n-1)))
     for i in range(k):
         t, d_time = rec_contract(graph)

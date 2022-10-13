@@ -1,5 +1,4 @@
 from graph import Graph
-from tqdm import tqdm
 
 
 def parse_file(filename: str):

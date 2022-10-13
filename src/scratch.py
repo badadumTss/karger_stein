@@ -1,7 +1,5 @@
 from files import files
-from hybrid import hybrid
-from tqdm import tqdm
-from test import measure_run_time, test_sw, test_ks
+from test import measure_run_time, test_sw, test_ks, test_hy
 from rapresentation import ks_complex, plot, plot3D, print_table, sw_complex
 from datetime import datetime
 import random
@@ -49,7 +47,7 @@ if not args.no_sw:
 # Hybrid
 if not args.no_hy:
     print("{} Hybrid {}".format(decor, decor))
-    sw_run = measure_run_time(test_hy, frange)
+    hy_run = measure_run_time(test_hy, frange)
     plot3D(hy_run, 'Hybrid', sw_complex)
 
 if not args.no_ks:
