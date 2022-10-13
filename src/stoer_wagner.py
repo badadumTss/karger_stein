@@ -21,27 +21,43 @@ def stMinCut(graph):
             if v in q:
                 keys[v] = keys[v] + graph.weight(u, v)
                 q.update_elem(v, (keys[v], v))
-    return sum(graph.adj_matrix[t,:] + graph.adj_matrix[:,t]), s, t, perf_counter_ns()
+    
+    Vmt = set(graph.vertices)
+    Vmt.remove(t)
+    return ((Vmt, {t}),
+            s,
+            t,
+            perf_counter_ns())
 
 
 def stoer_wagner(graph):
+    
     if graph.n_vertices == 2:
-        vertices = list(v for v in graph.vertices)
-        c = perf_counter_ns()
-        # QUI, deve tornare il taglio perchè poi ne deve misurare il
-        # peso, usare solo il peso dell'arco tra i due non restituisce
-        # una visione completa
-        return graph.weight(vertices[0], vertices[1]), graph.n_vertices, graph.n_edges, c, c
+        vs = list(v for v in graph.vertices)
+        return ({vs[0]}, {vs[1]}), perf_counter_ns()
+    
     else:
-        # G\{s,t}
         g = copy.deepcopy(graph)
-        c1, s, t, d_t1= stMinCut(graph)
-        # do not consider s and t anymore, but do not remove the
-        # edges, in order to consider them for future cuts
-        g.remove(s,False)
-        g.remove(t,False)
-        c2, n, m, d_t2, junk = stoer_wagner(g)
-        if c1 <= c2:
-            return c1, graph.n_vertices, graph.n_edges, d_t1, perf_counter_ns()
+        c1, s, t, d_t1 = stMinCut(graph)
+
+        # G\{s,t}
+        g.remove(s)
+        g.remove(t)
+        
+        # (X2, Y2)
+        (X2, Y2), d_t2 = stoer_wagner(g)
+
+        s1 = X2.union({s,t})
+        s2 = Y2.union({s,t})
+        cuts = [(s1, Y2), (X2, s2)]
+        
+        c2 = None
+        if graph.cut_weight(cuts[0]) <= graph.cut_weight(cuts[1]):
+            c2 = cuts[0]
         else:
-            return c2, graph.n_vertices, graph.n_edges, d_t2, perf_counter_ns()
+            c2 = cuts[1]
+
+        if graph.cut_weight(c1) <= graph.cut_weight(c2):
+            return c1, d_t1
+        else:
+            return c2, d_t2

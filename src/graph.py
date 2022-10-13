@@ -68,3 +68,11 @@ class Graph:
             self.adj_matrix[n, :] = 0
             self.adj_matrix[:, n] = 0
         self.vertices.remove(n)
+
+    def cut_weight(self, cut):
+        c1, c2 = cut
+        w = 0
+        for u in c1:
+            for v in c2:
+                w += self.weight(u,v)
+        return w

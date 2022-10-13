@@ -42,4 +42,4 @@ def karger_stein(graph):
         if t < amin:
             amin = t
             full_d_time = d_time
-    return amin, n, m, full_d_time, perf_counter_ns()
+    return amin, full_d_time

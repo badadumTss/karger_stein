@@ -11,10 +11,10 @@ import matplotlib.pyplot as plt
 
 
 def print_table(data):
-    fstr = "{:<25}{:<12}{:<12}{:<15}{:<15}{:<13}"
+    fstr = "{:<25}{:<13}{:<13}{:<15}{:<15}{:<13}"
     print(fstr.format("name", "time", "d_time", "n_vertices", "n_edges", "sol"))
     print("-"*80)
-    for (afile, time, d_time, sol, n, m) in data:
+    for (afile, time, d_time, n, m, sol) in data:
         print(fstr.format(afile, time, d_time, n, m, sol))
 
 
@@ -52,9 +52,9 @@ def save_plot(name):
 
 def plot3D(data, alg_name, f):
     print("Plotting ...")
-    times = [time for (afile, time, d_time, sol, n, m) in data]
-    n = [n for (afile, time, d_time, sol, n, m) in data]
-    m = [m for (afile, time, d_time, sol, n, m) in data]
+    times = [time for (afile, time, d_time, n, m, sol) in data]
+    n = [n for (afile, time, d_time, n, m, sol) in data]
+    m = [m for (afile, time, d_time, n, m, sol) in data]
     
     limit = max(max(n), max(m))
     x = np.linspace(0, limit, 100)
@@ -81,8 +81,8 @@ def plot3D(data, alg_name, f):
 
 def plot(data, alg_name, f):
     print("Plotting ...")
-    times = [time for (afile, time, d_time, sol, n, m) in data]
-    n = [n for (afile, time, d_time, sol, n, m) in data]
+    times = [time for (afile, time, d_time, n, m, sol) in data]
+    n = [n for (afile, time, d_time, n, m, sol) in data]
 
     # calc coefficent in order to see a better function
     c = max([t / f(n) for t, n in zip(times, n)])

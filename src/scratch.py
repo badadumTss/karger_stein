@@ -1,9 +1,7 @@
 from files import files
-from karger_stein import karger_stein
-from stoer_wagner import stoer_wagner
 from hybrid import hybrid
 from tqdm import tqdm
-from test import measure_run_time
+from test import measure_run_time, test_sw, test_ks
 from rapresentation import ks_complex, plot, plot3D, print_table, sw_complex
 from datetime import datetime
 import random
@@ -35,20 +33,23 @@ hy_run = []
 
 # Karger Stein
 if not args.no_ks:
-    print("\n{} KARKGER AND STEIN {}".format(decor, decor))
-    ks_run = measure_run_time(karger_stein, frange, "karger_stein_scratch")
+    print("\n{} KARKGER AND STEIN START {}".format(decor, decor))
+    ks_run = measure_run_time(test_ks, frange)
+    print("\n{} KARKGER AND STEIN DONE  {}".format(decor, decor))
+    print_table(ks_run)
     plot(ks_run, 'Karger and Stein', ks_complex)
 
 # Stoer and Wagner
 if not args.no_sw:
-    print("{} STOER AND WAGNER {}".format(decor, decor))
-    sw_run = measure_run_time(stoer_wagner, frange, "stoer_wagner_scratch")
+    print("{} STOER AND WAGNER START {}".format(decor, decor))
+    sw_run = measure_run_time(test_sw, frange, 1)
+    print("\n{} STOER AND WAGNER DONE  {}".format(decor, decor))
     plot3D(sw_run, 'Stoer and Wagner', sw_complex)
 
 # Hybrid
 if not args.no_hy:
     print("{} Hybrid {}".format(decor, decor))
-    sw_run = measure_run_time(hybrid, frange, "hybrid_scratch")
+    sw_run = measure_run_time(test_hy, frange)
     plot3D(hy_run, 'Hybrid', sw_complex)
 
 if not args.no_ks:
