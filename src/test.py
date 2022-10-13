@@ -1,5 +1,4 @@
 from time import perf_counter_ns
-from tqdm import tqdm
 from file_parser import parse_file
 import gc
 from multiprocessing import Pool, cpu_count
@@ -13,7 +12,7 @@ def divide_chunks(l, n):
         yield l[i:i + n]
 
 def test_sw(fname):
-    tqdm.write("(sw) working on {}".format(fname))
+    print("(sw) working on {}".format(fname))
     graph = parse_file("dataset/{}".format(fname))
     gc.disable()
     start_time = perf_counter_ns()
@@ -31,7 +30,7 @@ def test_sw(fname):
     return run
 
 def test_ks(fname):
-    tqdm.write("(ks) working on {}".format(fname))
+    print("(ks) working on {}".format(fname))
     graph = parse_file("dataset/{}".format(fname))
     gc.disable()
     start_time = perf_counter_ns()
@@ -49,7 +48,7 @@ def test_ks(fname):
     return run
 
 def test_hy(fname):
-    tqdm.write("(hy) working on {}".format(fname))
+    print("(hy) working on {}".format(fname))
     graph = parse_file("dataset/{}".format(fname))
     gc.disable()
     start_time = perf_counter_ns()
