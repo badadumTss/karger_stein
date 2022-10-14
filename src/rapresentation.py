@@ -71,9 +71,9 @@ def plot3D(data, alg_name, f):
     # New plot
     ax = plt.axes(projection='3d')
     ax.plot_surface(X, Y, Z, cmap='PiYG', alpha=0.5)
-    ax.set_xlabel('x')
-    ax.set_ylabel('y')
-    ax.set_zlabel('z');
+    ax.set_xlabel('vertices')
+    ax.set_ylabel('edges')
+    ax.set_zlabel('time');
 
     ax.scatter(n,m,times, label="{} runs".format(alg_name))
     ax.legend()

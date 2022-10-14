@@ -9,8 +9,22 @@ only the karger and stein is implemented) and output the found
 solution, the instance size (number of nodes and edges) the time the
 algorithm took and the discovery time (time from the start of the alg
 in wich the min cut is found)
-* DONE Kerger and stein
-Works by contracting the graph repeatedly and recursively.
-* DONE Stoer and wagner
-Stoer and wagner also works
+* Activate the environment
+  #+begin_src shell
+    python3 -m venv venv
+    pip install -r requirements.txt
+  #+end_src
+* Run the script
+  #+BEGIN_SRC shell
+    python src/main.py --help
+  #+END_SRC
+  will expose all the available options (disable specific algorithms
+  run, select specific files in the =dataset= folder, ...). By default
+  all the algorithms (Karger and Stein, Stoer and Wagner and the
+  hybrid approach) are run, the results collected in separate files
+  and run times against input size are plotted. So usually what you
+  eant to run is
+  #+begin_src shell
+    python src/main.py
+  #+end_src
 
