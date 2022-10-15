@@ -1,6 +1,10 @@
 #+TITLE: Minimum Cut problem
 #+AUTHOR: Luca Zaninotto -- 2057074
 #+DATE: 30 sept 2022
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usepackage{float}
+#+OPTIONS: toc:nil
+
 * The problem
   The problem we want to solve is to find a cut of a graph such that
   its weight is minimal. In other words, given a graph
@@ -22,6 +26,7 @@
   \[\text{cost}(p_1, p_2) = \sum_{u \in p_1, v \in p_2} w((u,v))\]
 
   is minimized.
+
 * Karger and Stein
   Karger and stein works by joining subsets of nodes, until only two
   remain. Those two are a cut of the graph. More in detail, given a
@@ -43,30 +48,42 @@
   because of the way in wich the =contraction= procedure selects the
   nodes to join in the partitions. The two nodes are selected based on
   a random selection based on the weight of the nodes. Nodes with an
-  higher weight have an higher probability of being selected. This way
-  the probability of ending up with the minimum cut of the graph lifts
-  up from \(\frac{1}{2^n}\) to \(\frac{2}{n^2}\). This means that in
-  order to have a sufficently high probability of picking the minimum
-  cut of the graph we need to run the procedure \[\frac{n \dot
-  \log(n)}{n-1}\] times.
-  # Scrivere che il bound è stato ricacolato, in classe ne ha dato uno
-  # più lasco
+  higher weight have an higher probability of being selected.
+
+  Since a graph has \(2^{n-1}-1\) possible cuts among wich at most
+  \(\binom{n}{2}\) are minimum cuts, the probability of picking one of
+  these is at most
+
+  \[p_n \geq \binom{n}{2}\]
+
+  Therefore by repeating the algorithm
+
+  \[T = \binom{n}{2} \log(n)\]
+
+  times, the probability of not finding the minimum cut becomes
+
+  \[\left[ 1 - \frac{1}{\binom{n}{2}}\right]^T \leq \frac{1}{e^{\log(n)}} = \frac{1}{n}\]
+
+  And so the total running time for \(T\) repetitions for a graph with
+  \(n\) vertices and \(m\) egdes is \(O(mT) = O(mn^2\log(n))\)
   
 ** Results
    #+attr_org: :width 500px
-   #+attr_latex: :width 350px
+   #+attr_latex: :width 330px
    #+CAPTION: Karger and Stein run times against input size (number of vertices)
    [[../figs/Karger and Stein.png]]
 
-   The function plotted is \(O(n^2\log^3(n))\) wich is the overall
-   complexity of the algorithm. the coefficent is calculated as
+   The function plotted is \(O(mn^2\log(n))\) that is the overall
+   complexity of the algorithm, the coefficent for the surface (under
+   wich all results should fall) is calculated as
 
-   \[\max \left( \frac{t}{n^2\log^3(n)} \right) \]
+   \[\max \left( \frac{t}{mn^2\log(n)} \right) \]
 
    since the time of execution of the algorithm is maximized by this
    function and the different coefficent depend also on external
    factors (cpu throttle, memory allocations, etc.) and we're
    interested the behaviour of the algorithm against the input nodes.
+
 * Stoer and Wagner
   Stoer and Wagner works in another way. Instead of relying on random
   cuts relies on the fact that given a couple of nodes, They either
@@ -87,10 +104,11 @@
   for \(G\backslash\{s,t\}\) (The same graph as \(G\), where the nodes
   \(s\) and \(t\) are merged together) is also a global min-cut for
   \(G\).
+
 ** Results
    The complexity of this algorithm is
 
-   \[O(mn * \log(n))\]
+   \[O(mn \log(n))\]
 
    where \(n = |V|\) and \(m = |E|\). so the coefficent for the plot
    is calculated again as
@@ -100,16 +118,78 @@
    #+attr_latex: :width 350px
    #+CAPTION: Stoer and Wagner run times against input size (nodes and edges)
    [[../figs/Stoer and Wagner.png]]
+
 * Hybrid approach
   An Hybrid approach consist into merging the two approaches (Karger
-  and Stein and Stoer and Wagner) running Karger and Stein t times and
-  then running Stoer and Wagner on the reulting graph allows to reduce
-  the time? probabilmente no, karger and stein è parecchio lento.
+  and Stein and Stoer and Wagner): the algorithm contracts the graph
+  until there are \(t = \frac{n}{\sqrt{2}}+1\) nodes, from there, Stoer
+  and Wagner is run on the contracted graph.
+
+  To study the complexity we can taka look at the hybrid procedure:
+  #+begin_src python
+    def hybrid(graph):
+	n = graph.n_vertices
+	t = int(np.ceil((n * np.log(n)/ (n-1))))
+	amin = np.Inf
+	d_time = 0
+	for i in range(t):
+	    cut, d_time = hybrid_iteration(graph)
+	    if cut < amin:
+		amin = cut
+		d_time = perf_counter_ns()
+	return amin, d_time
+  #+end_src
+  where the hybrid iteration is described as
+  #+begin_src python
+    def hybrid_iteration(graph):
+	t = np.ceil(graph.n_vertices / np.sqrt(2) + 1)
+	g = contract(graph, t)
+	return stoer_wagner(g)
+  #+end_src
+  one iteration takes \(O(mn\log(n))\), since \(t =
+  \frac{n}{\sqrt{2}} + 1\), the contract procedure consists in a
+  single while loop that merges one node per time, running \(t\)
+  times, and then apply the stoer and wagner algorithm, that has
+  complexity \(O(mn\log(n))\). Therefore the overall complexity is
+  \(O(mn\log(n))\). Since the lagorithm is just a matter of iterating
+  the iteration \(\frac{n}{n-1}\log(n)\) times (to respect the bound
+  of not cross the minimum cut in the contraction with probability at
+  least \(\frac{1}{n}\)), the overall complexity is also
+  \[O(mn\log(n))\].
+
 ** Results
    #+attr_org: :width 500px
    #+attr_latex: :width 350px
    #+CAPTION: Hybrid run times against input size (nodes and edges)
    [[../figs/Hybrid.png]]
+
+   By plotting the run times against the input size (nodes and edges)
+   we can see that they are all below the surface induced by the
+   complexith function of the algorithm.
+
 * Results
-** Karger and Stein vs Hybrid discovery time
 ** On efficency
+   By purely relying on the complexity analysis of the algorithms we
+   should be able to see how the karger and stein algorithm should
+   perform qorse than Stoer and Wagner and the Hybrid approach, wich
+   have instead comparable complexities. By plotting the run time of
+   each algorithm:
+   #+attr_org: :width 500px
+   #+attr_latex: :width 350px
+   #+CAPTION: Runtime comparison between the three algorithms
+   [[../figs/Runtime comp.png]]
+
+   By looinkg closely to the graph we can see how the results meet our
+   expectations: Karger and Stein perform generally worse than Stoer
+   and Wagner, that performs in a similar way to our approach.
+** On discovery time
+   Discovery time tells us another story. Even thoug Karger and Stein
+   performs badly compare to the other two algorithms, the discovery
+   time for the graphs in the dataset is not that worse compared to
+   the discovery time of the hybrid algorithm. Stoer and Wagner
+   ouperforms the two even from this point of view, showing how is a
+   generally faster algorithm.
+   #+attr_org: :width 500px
+   #+attr_latex: :width 350px
+   #+CAPTION: Discovery time comparison between the three algorithms
+   [[../figs/Discovery comp.png]]

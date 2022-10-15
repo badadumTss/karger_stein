@@ -30,14 +30,14 @@ def read_csv(file_name):
     with open(file_name, 'r') as f:
         reader = csv.reader(f)
         for row in reader:
-            tmp += (tuple(row),)
-    for (afile, time, d_time, n, m, sol) in to_ret:
-        to_ret += [(afile, int(time), int(d_time), int(n), int(m), int(sol))]
+            tmp += [tuple(row)]
+    for (afile, time, d_time, n, m, sol) in tmp:
+        to_ret += [(afile, int(time), int(d_time), int(n), int(m), float(sol))]
     return to_ret
 
 
-def ks_complex(n):
-    return (n**2)*(np.log(n) ** 3)
+def ks_complex(n,m):
+    return (n**2)*m*np.log(n)
 
 def sw_complex(n,m):
     return n*m*np.log(n)
@@ -77,31 +77,4 @@ def plot3D(data, alg_name, f):
 
     ax.scatter(n,m,times, label="{} runs".format(alg_name))
     ax.legend()
-    save_plot(alg_name)
-
-def plot(data, alg_name, f):
-    print("Plotting ...")
-    times = [time for (afile, time, d_time, n, m, sol) in data]
-    n = [n for (afile, time, d_time, n, m, sol) in data]
-
-    # calc coefficent in order to see a better function
-    c = max([t / f(n) for t, n in zip(times, n)])
-
-    # plot against n^2(log n)^3
-    x = range(max(n) + 1)
-    y = [c*f(n) for n in x]
-    
-    # Close other active plots
-    plt.clf()
-    plt.cla()
-    plt.close()
-    
-    # New plot
-    ax = plt.gca()
-    ax.scatter(n, times, label="{} runs".format(alg_name))
-
-    ax.plot(x, y, 'y', label='complexity function')
-    ax.legend()
-    plt.xlabel("input nodes")
-    plt.ylabel("run time")
     save_plot(alg_name)

@@ -6,8 +6,11 @@ import random
 def contract(graph, n_v=2):
     g = copy.deepcopy(graph)
     while g.n_vertices > n_v:
+        # Build the cumulative weights list
         ws = list(map(lambda e: g.weight(e[0],e[1]), g.edges))
         cum_ws = [sum(ws[:i+1]) for i in range(len(ws))]
+        # give it to random.choices, as it already has the
+        # random_select procedura incorporated
         res = random.choices(g.edges, cum_weights=cum_ws)
         u, v = res[0]
         g.merge_vertices(u, v)

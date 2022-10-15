@@ -1,6 +1,6 @@
 from files import files
 from test import measure_run_time, test_sw, test_ks, test_hy
-from rapresentation import ks_complex, plot, plot3D, print_table, sw_complex
+from rapresentation import ks_complex, plot3D, print_table, sw_complex
 from datetime import datetime
 import random
 random.seed(str(datetime.now()))
@@ -34,7 +34,7 @@ if not args.no_ks:
     ks_run = measure_run_time(test_ks, frange)
     print("\n{} KARKGER AND STEIN DONE  {}".format(decor, decor))
     print_table(ks_run)
-    plot(ks_run, 'Karger and Stein', ks_complex)
+    plot3D(ks_run, 'Karger and Stein', ks_complex)
 
 # Stoer and Wagner
 if not args.no_sw:
