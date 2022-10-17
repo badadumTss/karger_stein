@@ -1,6 +1,6 @@
 from files import files
 from test import measure_run_time, test_sw, test_ks, test_hy
-from rapresentation import ks_complex, plot3D, print_table, sw_complex
+from rapresentation import ks_complex, plot3D, print_table, sw_complex, hy_complex, plot
 from datetime import datetime
 import random
 random.seed(str(datetime.now()))
@@ -34,7 +34,7 @@ if not args.no_ks:
     ks_run = measure_run_time(test_ks, frange)
     print("\n{} KARKGER AND STEIN DONE  {}".format(decor, decor))
     print_table(ks_run)
-    plot3D(ks_run, 'Karger and Stein', ks_complex)
+    plot(ks_run, 'Karger and Stein', ks_complex)
 
 # Stoer and Wagner
 if not args.no_sw:
@@ -48,7 +48,7 @@ if not args.no_hy:
     print("{} HYBRID START {}".format(decor, decor))
     hy_run = measure_run_time(test_hy, frange)
     print("{} HYBRID DONE. {}".format(decor, decor))
-    plot3D(hy_run, 'Hybrid', sw_complex)
+    plot3D(hy_run, 'Hybrid', hy_complex)
 
 if not args.no_ks:
     print_table(ks_run)

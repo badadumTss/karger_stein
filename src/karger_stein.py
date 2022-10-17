@@ -38,7 +38,7 @@ def karger_stein(graph):
     full_d_time = 0
     n = graph.n_vertices
     graph.n_edges
-    k = int(np.ceil(n * np.log(n) / (n-1)))
+    k = int(np.ceil(np.log(n) ** 2))
     for i in range(k):
         t, d_time = rec_contract(graph)
         if t < amin:

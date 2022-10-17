@@ -36,11 +36,14 @@ def read_csv(file_name):
     return to_ret
 
 
-def ks_complex(n,m):
-    return (n**2)*m*np.log(n)
+def ks_complex(n):
+    return (n ** 2) * (np.log(n) ** 3)
 
 def sw_complex(n,m):
     return n*m*np.log(n)
+
+def hy_complex(n,m):
+    return n*m*(np.log(n) ** 2)
 
 def save_plot(name):
     run_path = "figs"
@@ -49,6 +52,31 @@ def save_plot(name):
     to_save = os.path.join(run_path, "{}.png".format(name))
     plt.savefig(to_save, format='png', transparent=True, dpi=300)
     print("Saved plot to {}".format(to_save))
+
+
+def plot(data, alg_name, f):
+    print("Plotting ...")
+    times = [time for (afile, time, d_time, n, m, sol) in data]
+    n = [n for (afile, time, d_time, n, m, sol) in data]
+    
+    x = np.linspace(0, max(n) + 1, 100)
+    c = max([t / f(n) for t, n in zip(times, n)])
+    y = c*f(x)
+
+    # Close other active plots
+    plt.clf()
+    plt.cla()
+    plt.close()
+    
+    # New plot
+    ax = plt.axes()
+    ax.plot(x, y, 'y', label="complexity function")
+    ax.set_xlabel('vertices')
+    ax.set_ylabel('run time')
+
+    ax.scatter(n, times, label="{} runs".format(alg_name))
+    ax.legend()
+    save_plot(alg_name)
 
 def plot3D(data, alg_name, f):
     print("Plotting ...")
