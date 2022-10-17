@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
-from rapresentation import read_csv, plot3D, hy_complex
+from rapresentation import read_csv, plot, ks_complex
 
-hy = read_csv("hybrid")
-plot3D(hy, 'Hybrid', hy_complex)
+hy = read_csv("karger_stein")
+plot(hy, 'Karger and Stein', ks_complex)
 

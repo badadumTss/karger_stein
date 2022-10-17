@@ -56,7 +56,7 @@ def save_plot(name):
 
 def plot(data, alg_name, f):
     print("Plotting ...")
-    times = [time for (afile, time, d_time, n, m, sol) in data]
+    times = [time/(60*1000) for (afile, time, d_time, n, m, sol) in data]
     n = [n for (afile, time, d_time, n, m, sol) in data]
     
     x = np.linspace(0, max(n) + 1, 100)
@@ -72,7 +72,7 @@ def plot(data, alg_name, f):
     ax = plt.axes()
     ax.plot(x, y, 'y', label="complexity function")
     ax.set_xlabel('vertices')
-    ax.set_ylabel('run time')
+    ax.set_ylabel('run time (s)')
 
     ax.scatter(n, times, label="{} runs".format(alg_name))
     ax.legend()

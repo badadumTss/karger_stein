@@ -66,11 +66,11 @@
    #+NAME: fig:kargerstein
    [[../figs/Karger and Stein.png]]
 
-   The function plotted is \(O(mn^2\log(n))\) that is the overall
-   complexity of the algorithm, the coefficient for the surface (under
-   which all results should fall) is calculated as
+   The function plotted is the complexity of the algorithm. The
+   coefficient for the surface (under which all results should fall)
+   is calculated as
 
-   \[\max \left( \frac{t}{mn^2\log(n)} \right) \]
+   \[\max \left( \frac{t}{n^2\log^3(n)} \right) \]
 
    since the time of execution of the algorithm is maximized by this
    function and the different coefficient depend also on external
