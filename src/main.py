@@ -33,7 +33,6 @@ if not args.no_ks:
     print("\n{} KARKGER AND STEIN START {}".format(decor, decor))
     ks_run = measure_run_time(test_ks, frange)
     print("\n{} KARKGER AND STEIN DONE  {}".format(decor, decor))
-    print_table(ks_run)
     plot(ks_run, 'Karger and Stein', ks_complex)
 
 # Stoer and Wagner

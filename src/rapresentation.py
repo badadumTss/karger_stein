@@ -37,7 +37,7 @@ def read_csv(file_name):
 
 
 def ks_complex(n):
-    return (n ** 2) * (np.log(n) ** 3)
+    return (n ** 2) * (np.log(n) ** 2)
 
 def sw_complex(n,m):
     return n*m*np.log(n)

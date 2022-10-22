@@ -6,7 +6,8 @@ import random
 def contract(graph, n_v=2):
     g = copy.deepcopy(graph)
     while g.n_vertices > n_v:
-        # Build the cumulative weights list
+        # Build the cumulative weights list, Here's the O(n²), the
+        # rest of the procedure is O(1)
         ws = list(map(lambda e: g.weight(e[0],e[1]), g.edges))
         cum_ws = [sum(ws[:i+1]) for i in range(len(ws))]
         # give it to random.choices, as it already has the
@@ -38,7 +39,7 @@ def karger_stein(graph):
     full_d_time = 0
     n = graph.n_vertices
     graph.n_edges
-    k = int(np.ceil(np.log(n) ** 2))
+    k = int(np.ceil((n * np.log(n)) / (n-1)))
     for i in range(k):
         t, d_time = rec_contract(graph)
         if t < amin:

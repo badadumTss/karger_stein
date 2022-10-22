@@ -11,8 +11,8 @@
 
   \[G = (V, E)\]
 
-  where \(V = \{1,2,3,\dots,n\}\) a set of \(n\) vertices and \(E =
-  \{(1,3), (4,6), \dots\}\) a set of \(m\) edges and a function
+  where \[V = \{1,2,3,\dots,n\}\] is a set of \(n\) vertices and \[E \subseteq
+  \{(u,v) \mid u,v \in V\}\] a set of \(|E| = m\) edges and a function
 
   \[ w : E \rightarrow \mathbb{R} \]
 
@@ -52,13 +52,68 @@
 
   Doing such procedure, allows to find a minimum cut with probability
   \(\frac{1}{\log(n)}\), therefore by repeating this procedure
-  \(\log^2(n)\) times we can find a minimum cut with error probability
+  \(O(\log^2(n))\) times we can find a minimum cut with error probability
   less than \(\frac{1}{n}\).
 
   Karger and Stein implemented as such has a complexity of
   
   \[O(n^2\log^3(n))\]
   
+** Another bound
+   Another bound for Karger and Stein is possible to achieve, if we
+   consider that early contractions in the =contraction= procedure are
+   much less likely to contract on the minimum cut.
+
+   We call \(X_i\) the event that no edge of the minimum cut is
+   contracted during the i-th iteration. We can define
+
+   \[X = \sum_{i=0}^k X_i\]
+
+   We know fron the analysis of the algorithm that by contracting to
+   \(t = \frac{n}{\sqrt{2}} + 1\) nodes the probability of contracting
+   the minimum cut in this process is
+
+   \[P(n) \geq \frac{1}{2}\]
+
+   wich means the probability of success at the i=th iteration is at
+   least \(\frac{1}{2}\)
+
+   \[P(X_i = 1) \leq \frac{1}{2}\]
+   
+   We waht to find \(k\) such that our our random variable \(X\) (the
+   sum of the /success/ of each iteration) does not go ``too far
+   away'' from the mean value \(\mu\)
+
+   \[\mu = E[X] = \sum_{i=0}^k E[X_i] = \frac{k}{2}\]
+
+   since \(X_i\)s are indipendent random indicator variables.
+
+   so we want to find
+
+   \[P\left(\left|X-\mu\right| < \epsilon \mu\right) = 1 - P\left(\left|X-\mu\right| > \epsilon \mu\right) \]
+
+   and we know by chernoff bound that
+
+   \[P\left(\left| X - \mu \right| > \epsilon \mu\right) \leq 2e^{-\frac{\mu\epsilon^2}{3}} \quad \text{for } 0 < \epsilon \leq 1\]
+
+   by replacing \(\mu = \frac{k}{2}\)
+   
+   \[P\left(\left| X - \frac{k}{2} \right| > \epsilon \frac{k}{2}\right) \leq 2e^{-\frac{\frac{k}{2}\epsilon^2}{3}} \quad \text{for } 0 < \epsilon \leq 1\]
+
+   and therefore by choosing \(k = \frac{6}{\epsilon^2}\log(n) =
+   O(\log(n))\) we have that
+
+   \[P\left(\left| X - \mu \right| > \epsilon \mu\right) \leq \frac{2}{n} = O\left(\frac{1}{n}\right)\]
+
+   and so
+   
+   \[P\left(\left|X-\mu\right| < \epsilon \mu\right) = 1 - O\left(\frac{1}{n}\right)\]
+   
+   therefore, for \(k = O\left(\log(n)\right)\) the algorithm gives
+   a correct result with high probability with a complexity of
+
+   \[O\left(n^2 \log^2(n)\right)\]
+
 ** Results
    #+attr_org: :width 500px
    #+attr_latex: :width 330px :placement [H]
@@ -70,7 +125,7 @@
    coefficient for the surface (under which all results should fall)
    is calculated as
 
-   \[\max \left( \frac{t}{n^2\log^3(n)} \right) \]
+   \[\max \left( \frac{t}{n^2\log^2(n)} \right) \]
 
    since the time of execution of the algorithm is maximized by this
    function and the different coefficient depend also on external
@@ -162,7 +217,8 @@
   #+begin_src python
     def hybrid(graph):
 	n = graph.n_vertices
-	t = int(np.ceil(np.log(n) ** 2))
+	# t = O(long(n))
+	t = int(np.ceil((n / (n-1)) * np.log(n))
 	amin = np.Inf
 	d_time = 0
 	for i in range(t):
@@ -184,11 +240,49 @@
   algorithm. Since the contraction is just a single loop running \(t =
   \frac{n}{\sqrt{2}} + 1\) times, =contract(graph,t)= is
   \(O(n)\). Stoer and Wagner on the resulting graph is
-  \(O(mn\log(n))\) by hypothesis. The whole procedure
-  (=hybrid(graph)=) is just a matter of running the =hybrid_iteration=
-  \(\log^2(n)\) times. Therefore it has complexity
+  \(O(mn\log(n))\) by hypothesis.
 
-  \[ O(mn\log^3(n)) \]
+  
+** How many times run the iteration
+   If we consider
+
+   \[X_i = \text{the \(i\)-th iteration has contracted a minimum cuts'edge}\]
+
+   we can have
+
+   \[X = \sum_{i=0}^k X_i\]
+
+   the sum of indipendent random variables that states how many times
+   the random contraction have contracted the minimum cut of the
+   graph. We know from hypothesis of Karger Stein algorithm, that
+
+   \[P(X_i = 1) \leq \frac{1}{2}\]
+
+   and by taking \(P(X_i = 1) = \frac{1}{2}\) as assumption we can
+   find an upper bound on the number of iterations needed in order to
+   find w.h.p. the minimum cut. We know that, on \(k\) iterations
+
+   \[\mu = E[X] = \sum_{i=0}^k E[X_i] = \sum_{i=0}^k \frac{1}{2} = \frac{k}{2} \]
+
+   And we want to find \(k\) s.t.
+
+   \[P\left(\frac{|\beta - \alpha|}{\alpha} > \epsilon \right) \leq O\left(\frac{1}{n}\right)\]
+
+   We can use the chernoff bound
+
+   \[P\left(|X - \mu| > \mu \delta \right) \leq 2e^{-\frac{\mu \delta^2}{3}}\]
+
+   that works for \(\delta \in (0,1]\) with \(\mu = \frac{k}{2}\). We
+   conclude that, with \(k = \frac{4}{\epsilon^2}\log(n)\) we can
+   say that
+
+   \[2 e^{-\frac{k\epsilon^2}{4}} = \frac{2}{n} = O\left( \frac{1}{n} \right)\]
+
+   So the same bound as for Karger and Stein applies, and the
+   algorithm has complexity
+
+   \[O\left(mn\log^2(n)\right)\]
+
 
 ** Results
    #+attr_org: :width 500px
@@ -326,8 +420,11 @@
    Inside of the =project= folder, three files (=stoer_wagner=,
    =karger_stein= and =hybrid=) represent a run carried on the 15 oct
    2022, and contains the results collected to make this document. The
-   following are the raw results, to show that wach of the algorithms
-   reoturn the same solution for each graph.
+   following are the raw results, to show that each of the algorithms
+   returns the same solution for each graph. Another script,
+   =check-results.py= is also left in the repository in order to
+   verify that each run of each algorithm returned the same min cut
+   solution.
    
 *** Karger and Stein
     #+attr_latex: :environment longtable :center

@@ -7,10 +7,6 @@ from karger_stein import karger_stein
 from stoer_wagner import stoer_wagner
 from hybrid import hybrid
 
-def divide_chunks(l, n):     
-    for i in range(0, len(l), n):
-        yield l[i:i + n]
-
 def test_sw(fname):
     print("(sw) working on {}".format(fname))
     graph = parse_file("dataset/{}".format(fname))

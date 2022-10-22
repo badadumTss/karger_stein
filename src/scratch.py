@@ -1,18 +1,10 @@
-import matplotlib.pyplot as plt
-from rapresentation import read_csv, plot, ks_complex
+from rapresentation import *
 
-ks = read_csv("karger_stein")
-sw = read_csv("stoer_wagner")
-hy = read_csv("hybrid")
+ks_run = read_csv("karger_stein")
+plot(ks_run, 'Karger and Stein', ks_complex)
 
-ks = [(name, sol) for (name, r, d, n, m, sol) in ks]
-sw = [(name, sol) for (name, r, d, n, m, sol) in sw]
-hy = [(name, sol) for (name, r, d, n, m, sol) in hy]
+sw_run = read_csv("stoer_wagner")
+plot3D(sw_run, 'Stoer and Wagner', sw_complex)
 
-ks = sorted(ks)
-sw = sorted(sw)
-hy = sorted(hy)
-
-for i, el in enumerate(zip(ks,sw,hy)):
-    if el[0] != el[1] or el[0] != el[1] or el[1] != el[2]:
-        print(el)
+hy_run = read_csv("hybrid")
+plot3D(hy_run, 'Hybrid', hy_complex)
