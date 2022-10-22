@@ -43,7 +43,7 @@ def sw_complex(n,m):
     return n*m*np.log(n)
 
 def hy_complex(n,m):
-    return n*m*(np.log(n) ** 3)
+    return n*m*(np.log(n) ** 2)
 
 def save_plot(name):
     run_path = "figs"
