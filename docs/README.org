@@ -69,24 +69,24 @@
 
    \[X = \sum_{i=0}^k X_i\]
 
-   We know fron the analysis of the algorithm that by contracting to
+   We know from the analysis of the algorithm that by contracting to
    \(t = \frac{n}{\sqrt{2}} + 1\) nodes the probability of contracting
    the minimum cut in this process is
 
    \[P(n) \geq \frac{1}{2}\]
 
-   wich means the probability of success at the i=th iteration is at
+   which means the probability of success at the i=th iteration is at
    least \(\frac{1}{2}\)
 
    \[P(X_i = 1) \leq \frac{1}{2}\]
    
-   We waht to find \(k\) such that our our random variable \(X\) (the
+   We want to find \(k\) such that our our random variable \(X\) (the
    sum of the /success/ of each iteration) does not go ``too far
    away'' from the mean value \(\mu\)
 
    \[\mu = E[X] = \sum_{i=0}^k E[X_i] = \frac{k}{2}\]
 
-   since \(X_i\)s are indipendent random indicator variables.
+   since \(X_i\)s are independent random indicator variables.
 
    so we want to find
 
@@ -252,14 +252,14 @@
 
    \[X = \sum_{i=0}^k X_i\]
 
-   the sum of indipendent random variables that states how many times
+   the sum of independent random variables that states how many times
    the random contraction have contracted the minimum cut of the
    graph. We know from hypothesis of Karger Stein algorithm, that
 
    \[P(X_i = 1) \leq \frac{1}{2}\]
 
    and by taking \(P(X_i = 1) = \frac{1}{2}\) as assumption we can
-   find an upper bound on the number of iterations needed in order to
+   find a lower bound on the number of iterations needed in order to
    find w.h.p. the minimum cut. We know that, on \(k\) iterations
 
    \[\mu = E[X] = \sum_{i=0}^k E[X_i] = \sum_{i=0}^k \frac{1}{2} = \frac{k}{2} \]
@@ -372,7 +372,7 @@
    run times of precedent runs.
 ** Structure
    Files in the =proj/src= folder are organized as follows:
-   - ~graph.py~ :: contains the implementation of a class ~Grap~. It
+   - ~graph.py~ :: contains the implementation of a class ~Graph~. It
      represents a graph, and internally consists on the adjacency
      matrix of the graph built starting by a list of nodes and
      edges. it implements methods useful for the algorithms (such as
